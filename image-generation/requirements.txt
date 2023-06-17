@@ -1,0 +1,7 @@
+requests
+flask
+diffusers
+transformers
+accelerate
+scipy
+safetensors

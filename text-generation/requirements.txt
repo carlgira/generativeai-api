@@ -1,0 +1,7 @@
+requests
+flask
+einops
+accelerate
+transformers
+xformers
+torch

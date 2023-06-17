@@ -1,0 +1,9 @@
+langchain
+pypdf
+unstructured
+requests
+flask
+opensearch-py
+transformers
+pdf2image
+tabulate
