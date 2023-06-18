@@ -25,9 +25,7 @@ def generate_music():
     file_name =  str(random.randint(1000, 10000))
     audio_write(file_name, wav[0].cpu(), model.sample_rate, strategy="loudness")
     
-    
     return_data = BytesIO()
-    
     
     with open(file_name + '.wav', 'rb') as fo:
         return_data.write(fo.read())

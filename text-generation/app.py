@@ -2,10 +2,11 @@ from flask import Flask, request, jsonify, send_file
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import transformers
 import torch
+import os
 
 flask = Flask(__name__)
 
-model = "bigscience/bloomz-7b1"
+model = os.environ['HUGGINGFACEHUB_MODEL']
 
 tokenizer = AutoTokenizer.from_pretrained(model)
 pipeline = transformers.pipeline(

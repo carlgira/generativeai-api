@@ -11,6 +11,12 @@ RUN pip3 install --upgrade pip
 RUN pip3 install torch
 RUN pip3 install -r requirements.txt
 
+
+ARG HUGGINGFACEHUB_MODEL="bigscience/bloomz-7b1"
+
+ENV HUGGINGFACEHUB_MODEL=$HUGGINGFACEHUB_MODEL
+
+
 EXPOSE 3000
 
 CMD ["python", "app.py"]

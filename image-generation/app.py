@@ -2,10 +2,11 @@ from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler
 import torch
 from flask import Flask, request, jsonify, send_file
 from io import BytesIO
+import os
 
 flask = Flask(__name__)
 
-model_id = "stabilityai/stable-diffusion-2-1-base"
+model_id = os.environ['HUGGINGFACEHUB_MODEL']
 scheduler = EulerDiscreteScheduler.from_pretrained(model_id, subfolder="scheduler")
 pipe = StableDiffusionPipeline.from_pretrained(model_id, scheduler=scheduler, torch_dtype=torch.float16)
 pipe = pipe.to("cuda")
