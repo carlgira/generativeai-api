@@ -11,3 +11,7 @@ Set of generative ai services in python
     docker build -t text-generation .
     docker build -t video-generation .
 ```
+
+
+vide-generation => 8.8 GB RAM, DISK 15 GB.
+text-generation => 14.2 GB RAM (7 GB on 3B), DISK 5 GB

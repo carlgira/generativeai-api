@@ -21,18 +21,20 @@ def generate_music():
     model.set_generation_params(duration=duration)
     
     wav = model.generate(prompt)
-    audio_write('temp', wav[0].cpu(), model.sample_rate, strategy="loudness")
+    
+    file_name =  str(random.randint(1000, 10000))
+    audio_write(file_name, wav[0].cpu(), model.sample_rate, strategy="loudness")
     
     
     return_data = BytesIO()
     
-    file_name =  str(random.randint(1000, 10000)) + '.wav'
-    with open(file_name, 'rb') as fo:
+    
+    with open(file_name + '.wav', 'rb') as fo:
         return_data.write(fo.read())
     
     return_data.seek(0)
 
-    os.remove(file_name)
+    os.remove(file_name + '.wav')
 
     return send_file(return_data, mimetype='audio/x-wav')
 

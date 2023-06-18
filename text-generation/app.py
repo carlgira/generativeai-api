@@ -5,7 +5,7 @@ import torch
 
 flask = Flask(__name__)
 
-model = "tiiuae/falcon-7b"
+model = "bigscience/bloomz-7b1"
 
 tokenizer = AutoTokenizer.from_pretrained(model)
 pipeline = transformers.pipeline(

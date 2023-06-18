@@ -2,7 +2,10 @@ curl -H "Content-Type: application/json" -d '{"prompt" : "bear with glasses"}' h
 
 curl -H "Content-Type: application/json" -d '{"prompt" : "bebop jazz", "duration": 8}' http://localhost:3000/generate_music -o temp.wav
 
-curl -H "Content-Type: application/json" -d '{"prompt" : "what is the answer to life the universe and everything", "max_length": 100}' http://localhost:3000/generate_text
+curl -H "Content-Type: application/json" -d '{"prompt" : "what is the answer to life the universe and everything? response: ", "max_length": 200}' http://localhost:3000/generate_text
+
+curl -H "Content-Type: application/json" -d '{"prompt" : "ما هو الجواب على حياة الكون وكل شيء؟ إجابة", "max_length": 200}' http://localhost:3000/generate_text
+
 
 curl -H "Content-Type: application/json" -d '{"prompt" : "waterfall", "negative_prompt": "text, watermark, copyright, blurry, low resolution, blur, low quality", "width": 512, "height": 288, "num_steps": 25, "guidance_scale": 23,  "fps": 24, "num_frames":10 }' http://localhost:3000/generate_video -o temp.mp4
 
