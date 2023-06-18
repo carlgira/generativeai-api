@@ -5,3 +5,8 @@ curl -H "Content-Type: application/json" -d '{"prompt" : "bebop jazz", "duration
 curl -H "Content-Type: application/json" -d '{"prompt" : "what is the answer to life the universe and everything", "max_length": 100}' http://localhost:3000/generate_text
 
 curl -H "Content-Type: application/json" -d '{"prompt" : "waterfall", "negative_prompt": "text, watermark, copyright, blurry, low resolution, blur, low quality", "width": 512, "height": 288, "num_steps": 25, "guidance_scale": 23,  "fps": 24, "num_frames":10 }' http://localhost:3000/generate_video -o temp.mp4
+
+
+curl -H "Content-Type: application/json" -d '{"prompt" : "a shark", "return_type": "zip"}' http://localhost:3000/generate_3d_object -o 3d.zip
+curl -H "Content-Type: application/json" -d '{"prompt" : "a shark", "return_type": "gif"}' http://localhost:3000/generate_3d_object -o 3d.gif
+curl -H "Content-Type: application/json" -d '{"prompt" : "a shark", "return_type": "obj"}' http://localhost:3000/generate_3d_object -o 3d.obj

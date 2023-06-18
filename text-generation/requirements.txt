@@ -4,4 +4,3 @@ einops
 accelerate
 transformers
 xformers
-torch

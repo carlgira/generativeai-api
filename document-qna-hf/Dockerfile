@@ -1,8 +1,8 @@
-FROM python:3.9-slim
+FROM python:3.11-slim
 
 # Copy files
 COPY app.py ./
-COPY backend.py ./
+COPY hf_langchain.py ./
 COPY requirements.txt ./
 
 # Dependencies
