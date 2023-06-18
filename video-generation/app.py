@@ -16,8 +16,12 @@ def generate_video():
     guidance_scale = request.get_json()['guidance_scale']
     fps = request.get_json()['fps']
     num_frames = request.get_json()['num_frames']
+    output_dir = 'outputs'
     
-    response = getoutput("python Text-To-Video-Finetuning/inference.py -m \"potat1\" -p \"{prompt}\" -n \"{negative_prompt}\" -W {width} -H {height} -o outputs -d cuda -x -s {num_steps} -g {guidance_scale} -f {fps} -T {num_frames}".format(prompt=prompt, negative_prompt=negative_prompt, width=width, height=height, num_steps=num_steps, guidance_scale=guidance_scale, fps=fps, num_frames=num_frames))
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    
+    response = getoutput("python Text-To-Video-Finetuning/inference.py -m \"potat1\" -p \"{prompt}\" -n \"{negative_prompt}\" -W {width} -H {height} -o {output_dir} -d cuda -x -s {num_steps} -g {guidance_scale} -f {fps} -T {num_frames}".format(prompt=prompt, negative_prompt=negative_prompt, width=width, height=height, num_steps=num_steps, guidance_scale=guidance_scale, fps=fps, num_frames=num_frames, output_dir=output_dir))
     
     
     files = [f for f in os.listdir("outputs") if f.endswith(".mp4")]
