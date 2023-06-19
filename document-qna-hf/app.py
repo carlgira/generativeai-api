@@ -1,6 +1,9 @@
 import os
+os.environ['CURL_CA_BUNDLE'] = ''
+
 from flask import Flask, request, jsonify
 from hf_langchain import OpenSearchBackend
+
 
 flask = Flask(__name__)
 
