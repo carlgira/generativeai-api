@@ -1,13 +1,12 @@
 FROM python:3.11-slim
 
-# Copy files
-COPY app.py ./
-COPY requirements.txt ./
-
 # Dependencies
+COPY requirements.txt ./
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
 
+# App
+COPY app.py ./
 
 ARG HUGGINGFACEHUB_MODEL="stabilityai/stable-diffusion-2-1-base"
 
