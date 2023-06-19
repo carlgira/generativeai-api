@@ -1,4 +1,11 @@
-FROM python:3.11-slim
+FROM nvidia/cuda:11.4.3-cudnn8-runtime-ubuntu20.04
+
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt update && \
+    apt install --no-install-recommends -y build-essential software-properties-common && \
+    add-apt-repository -y ppa:deadsnakes/ppa && \
+    apt install --no-install-recommends -y python3.11 python3-pip python3-setuptools python3-distutils && \
+    apt clean && rm -rf /var/lib/apt/lists/*
 
 # Dependencies
 COPY requirements.txt ./
@@ -27,4 +34,4 @@ ENV LLM_MAX_NUM_TOKENS=$LLM_MAX_NUM_TOKENS
 
 EXPOSE 3000
 
-CMD ["python", "app.py"]
+CMD ["python3.11", "app.py"]
