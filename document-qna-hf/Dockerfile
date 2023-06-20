@@ -4,13 +4,14 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update
 RUN apt install build-essential software-properties-common -y
 RUN add-apt-repository -y ppa:deadsnakes/ppa
-RUN apt install --no-install-recommends -y python3.11 python3-pip python3-setuptools python3-distutils
+RUN apt install --no-install-recommends -y python3.11 python3.11-venv python3.11-distutils wget
 RUN apt clean && rm -rf /var/lib/apt/lists/*
 
 # Dependencies
 COPY requirements.txt ./
-RUN pip3 install --upgrade pip
-RUN pip3 install -r requirements.txt
+RUN wget https://bootstrap.pypa.io/get-pip.py && python3.11 get-pip.py
+RUN pip3.11 install --upgrade pip
+RUN pip3.11 install -r requirements.txt
 
 # App
 COPY app.py ./
@@ -31,6 +32,10 @@ ENV DOC_CHUNK_SIZE=$DOC_CHUNK_SIZE
 ENV DOC_CHUNK_OVERLAP=$DOC_CHUNK_OVERLAP
 ENV DOC_MAX_NEW_TOKENS=$DOC_MAX_NEW_TOKENS
 ENV LLM_MAX_NUM_TOKENS=$LLM_MAX_NUM_TOKENS
+
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
+ENV NVIDIA_REQUIRE_CUDA "cuda>=11.4"
 
 EXPOSE 3000
 
