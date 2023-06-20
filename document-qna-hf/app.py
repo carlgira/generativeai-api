@@ -15,17 +15,14 @@ backed = OpenSearchBackend(OPENSEARCH_URL)
 
 @flask.route('/load_file', methods=['POST'])
 def load_file():
-    try:
-        file = request.files['document']
-        file_name = 'docs/' + file.filename
+    file = request.files['document']
+    file_name = 'docs/' + file.filename
 
-        if not os.path.isdir(file_name):
-            file.save(file_name)
+    if not os.path.isdir(file_name):
+        file.save(file_name)
 
-        docs = backed.read_document(file_name)
-        backed.load_doc_to_db(docs, opensearch_index=file_name, verify_certs=False)
-    except:
-        return jsonify({"status": "file not loaded"})
+    docs = backed.read_document(file_name)
+    backed.load_doc_to_db(docs, opensearch_index=file_name, verify_certs=False)
 
     return jsonify({"status": "file loaded", "index": file_name})
 
