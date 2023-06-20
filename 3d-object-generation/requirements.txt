@@ -1,5 +1,5 @@
-requests
-flask
-ipywidgets
-pyyaml
-git+https://github.com/openai/shap-e.git
+requests==2.31.0
+Flask==2.3.2
+ipywidgets==8.0.6
+PyYAML==6.0
+git+https://github.com/openai/shap-e.git@db3f3b4c2f572b53fbe408d202e2445a1f656353

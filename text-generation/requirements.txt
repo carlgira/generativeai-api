@@ -1,6 +1,6 @@
-requests
-flask
-einops
-accelerate
-transformers
-xformers
+requests==2.31.0
+Flask==2.3.2
+einops==0.6.1
+accelerate==0.20.3
+transformers==4.30.2
+xformers==0.0.20
