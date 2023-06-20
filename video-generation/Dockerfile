@@ -4,7 +4,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update
 RUN apt install build-essential software-properties-common -y
 RUN add-apt-repository -y ppa:deadsnakes/ppa
-RUN apt install --no-install-recommends -y python3.11 python3.11-venv python3.11-distutils wget git ffmpeg
+RUN apt install --no-install-recommends -y python3.11 python3.11-venv python3.11-dev python3.11-distutils wget git ffmpeg
 RUN apt clean && rm -rf /var/lib/apt/lists/*
 
 # Dependencies
