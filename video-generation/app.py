@@ -21,7 +21,7 @@ def generate_video():
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     
-    response = getoutput("python Text-To-Video-Finetuning/inference.py -m \"potat1\" -p \"{prompt}\" -n \"{negative_prompt}\" -W {width} -H {height} -o {output_dir} -d cuda -x -s {num_steps} -g {guidance_scale} -f {fps} -T {num_frames}".format(prompt=prompt, negative_prompt=negative_prompt, width=width, height=height, num_steps=num_steps, guidance_scale=guidance_scale, fps=fps, num_frames=num_frames, output_dir=output_dir))
+    response = getoutput("python3.11 Text-To-Video-Finetuning/inference.py -m \"potat1\" -p \"{prompt}\" -n \"{negative_prompt}\" -W {width} -H {height} -o {output_dir} -d cuda -x -s {num_steps} -g {guidance_scale} -f {fps} -T {num_frames}".format(prompt=prompt, negative_prompt=negative_prompt, width=width, height=height, num_steps=num_steps, guidance_scale=guidance_scale, fps=fps, num_frames=num_frames, output_dir=output_dir))
     
     
     files = [f for f in os.listdir("outputs") if f.endswith(".mp4")]
