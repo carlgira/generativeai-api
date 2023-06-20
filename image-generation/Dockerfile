@@ -10,8 +10,8 @@ RUN apt clean && rm -rf /var/lib/apt/lists/*
 # Dependencies
 COPY requirements.txt ./
 RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11
-RUN python3.11 -m pip install --upgrade pip
-RUN python3.11 -m pip install -r requirements.txt
+RUN pip3.11 install --upgrade pip
+RUN pip3.11 install -r requirements.txt
 
 # App
 COPY app.py ./
