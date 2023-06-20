@@ -19,4 +19,4 @@ COPY app.py ./
 
 EXPOSE 3000
 
-CMD ["python", "app.py"]
+CMD ["python3.11", "app.py"]

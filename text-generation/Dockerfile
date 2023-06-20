@@ -23,4 +23,4 @@ ENV HUGGINGFACEHUB_MODEL=$HUGGINGFACEHUB_MODEL
 
 EXPOSE 3000
 
-CMD ["python", "app.py"]
+CMD ["python3.11", "app.py"]
