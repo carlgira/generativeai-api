@@ -9,8 +9,8 @@ RUN apt clean && rm -rf /var/lib/apt/lists/*
 
 # Dependencies
 COPY requirements.txt ./
-RUN pip3 install --upgrade pip
-RUN pip3 install -r requirements.txt
+RUN python3.11 -m pip install --upgrade pip
+RUN python3.11 -m pip install -r requirements.txt
 
 # App
 COPY app.py ./
