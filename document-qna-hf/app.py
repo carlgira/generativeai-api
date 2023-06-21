@@ -16,7 +16,7 @@ backed = OpenSearchBackend(OPENSEARCH_URL)
 @flask.route('/load_file', methods=['POST'])
 def load_file():
     file = request.files['document']
-    file_name = 'docs/' + file.filename
+    file_name = file.filename
 
     if not os.path.isdir(file_name):
         file.save(file_name)

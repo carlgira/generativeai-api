@@ -16,7 +16,6 @@ RUN pip3.11 install -r requirements.txt
 # App
 COPY app.py ./
 COPY hf_langchain.py ./
-RUN mkdir docs
 
 ARG HUGGINGFACEHUB_API_TOKEN=''
 ARG OPENSEARCH_URL=''
