@@ -2,6 +2,7 @@ langchain==0.0.205
 pypdf==3.10.0
 unstructured==0.7.6
 requests==2.31.0
+urllib3==1.26.14
 Flask==2.3.2
 opensearch-py==2.2.0
 pdf2image==1.16.3
