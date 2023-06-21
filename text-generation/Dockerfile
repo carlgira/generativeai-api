@@ -17,7 +17,7 @@ RUN pip3.11 install -r requirements.txt
 # App
 COPY app.py ./
 
-ARG HUGGINGFACEHUB_MODEL="bigscience/bloomz-7b1"
+ARG HUGGINGFACEHUB_MODEL="tiiuae/falcon-7b"
 
 ENV HUGGINGFACEHUB_MODEL=$HUGGINGFACEHUB_MODEL
 
