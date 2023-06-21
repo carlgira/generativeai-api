@@ -7,14 +7,15 @@ from langchain.docstore.document import Document
 from langchain.document_loaders import UnstructuredWordDocumentLoader, OnlinePDFLoader
 from langchain.chains.question_answering import load_qa_chain
 import cohere
-
+from langchain.embeddings.cohere import CohereEmbeddings
+from langchain.llms import Cohere
 from abc import ABC, abstractmethod
 import os
 
-CHUNK_SIZE = os.environ['DOC_CHUNK_SIZE']
-CHUNK_OVERLAP = os.environ['DOC_CHUNK_OVERLAP']
-MAX_NEW_TOKENS = os.environ['DOC_MAX_NEW_TOKENS']
-MAX_NUM_TOKENS = os.environ['LLM_MAX_NUM_TOKENS']
+CHUNK_SIZE = int(os.environ['DOC_CHUNK_SIZE'])
+CHUNK_OVERLAP = int(os.environ['DOC_CHUNK_OVERLAP'])
+MAX_NEW_TOKENS = int(os.environ['DOC_MAX_NEW_TOKENS'])
+MAX_NUM_TOKENS = int(os.environ['LLM_MAX_NUM_TOKENS'])
 COHERE_API_KEY = os.environ['COHERE_API_KEY']
 COHERE_MODEL_NAME = os.environ['COHERE_MODEL_NAME']
 COHERE_EMBEDDINGS_MODEL_NAME = os.environ['COHERE_EMBEDDINGS_MODEL_NAME']
@@ -48,8 +49,7 @@ COMBINE_PROMPT = PromptTemplate(
 class LangChainBacked(ABC):
     def __init__(self, model, embedding_model, max_tokens, max_new_tokens):
         self.embeddings = CohereEmbeddings(model = embedding_model)
-        self.llm = Cohere(model=model, model_kwargs={"temperature": 0.01, "max_new_tokens": max_new_tokens,
-                                                               "max_tokens": max_tokens})
+        self.llm = Cohere(model=model, temperature=0)
         
         self.model = model
         self.max_tokens = max_tokens

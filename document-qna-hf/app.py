@@ -8,14 +8,13 @@ flask = Flask(__name__)
 OPENSEARCH_URL = os.environ['OPENSEARCH_URL']
 backed = OpenSearchBackend(OPENSEARCH_URL)
 
+APP_INDEX_PREFIX ='hf_'
 
 @flask.route('/load_file', methods=['POST'])
 def load_file():
     file = request.files['document']
     file_name = file.filename
-    index_name = file_name
-    if request.get_json().has_key('index'):
-        index_name = request.get_json()['index']
+    index_name = APP_INDEX_PREFIX + request.get_json()['index']
     
     if not os.path.isdir(file_name):
         file.save(file_name)
@@ -23,13 +22,13 @@ def load_file():
     docs = backed.read_document(file_name)
     backed.load_doc_to_db(docs, opensearch_index=index_name, verify_certs=False)
 
-    return jsonify({"status": "file loaded", "index": index_name})
+    return jsonify({"status": "file loaded", "index": request.get_json()['index']})
 
 
 @flask.route('/query_docs', methods=['POST'])
 def query_docs():
     question = request.get_json()['question']
-    index_name = request.get_json()['index']
+    index_name = APP_INDEX_PREFIX + request.get_json()['index']
 
     return jsonify({"response" : backed.answer_query(question, opensearch_index=index_name, verify_certs=False)})
 
