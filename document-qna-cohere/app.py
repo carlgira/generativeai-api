@@ -29,7 +29,7 @@ def load_file():
 @flask.route('/query_docs', methods=['POST'])
 def query_docs():
     question = request.get_json()['question']
-    index_name = APP_INDEX_PREFIX + request.form.get('index')
+    index_name = APP_INDEX_PREFIX + request.get_json()['index']
 
     return jsonify({"response" : backed.answer_query(question, opensearch_index=index_name, verify_certs=False)})
 
