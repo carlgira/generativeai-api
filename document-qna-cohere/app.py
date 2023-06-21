@@ -23,7 +23,7 @@ def load_file():
     docs = backed.read_document(file_name)
     backed.load_doc_to_db(docs, opensearch_index=index_name, verify_certs=False)
 
-    return jsonify({"status": "file loaded", "index": request.get_json()['index']})
+    return jsonify({"status": "file loaded", "index": request.form.get('index')})
 
 
 @flask.route('/query_docs', methods=['POST'])
