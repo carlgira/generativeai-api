@@ -23,6 +23,12 @@ spec:
               name: http
             - containerPort: 9300
               name: transport
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+---
+
 ---
 apiVersion: v1
 kind: Service
@@ -35,27 +41,121 @@ spec:
     - protocol: TCP
       port: 9200
       targetPort: 9200
-  type: LoadBalancer
+  type: ClusterIP
+
+---
+# document-qna-cohere
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: document-qna-cohere
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: document-qna-cohere
+  template:
+    metadata:
+      labels:
+        app: document-qna-cohere
+    spec:
+      containers:
+        - name: document-qna-cohere
+          image: fra.ocir.io/wedoinfra/generative-api/document-qna-cohere:0.0.1
+          env:
+            - name: discovery.type
+              value: single-node
+            - name: OPENSEARCH_URL
+              value: "https://admin:admin@opensearch.default.svc.cluster.local:9200"
+            - name: COHERE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cohere-api-key
+                  key: COHERE_API_KEY
+          ports:
+            - containerPort: 3000
+              name: http
+          resources:
+            requests:
+              memory: 2000Mi
+          imagePullPolicy: Always
+      imagePullSecrets:
+              - name: ocirsecret
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node.kubernetes.io/disk-pressure"
+          operator: "Exists"
+          effect: "NoExecute"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: document-qna-cohere
+spec:
+  selector:
+    app: document-qna-cohere
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
 
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: documetqa-opensearch
+  name: opensearch
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: documentqa-opensearch
+      app: opensearch
   template:
     metadata:
       labels:
-        app: documentqa-opensearch
+        app: opensearch
     spec:
       containers:
         - name: opensearch
-          image: fra.ocir.io/wedoinfra/documentqa-opensearch/documentqa-opensearch:0.0.2
+          image: opensearchproject/opensearch:latest
+          env:
+            - name: discovery.type
+              value: single-node
+          ports:
+            - containerPort: 9200
+              name: http
+            - containerPort: 9300
+              name: transport
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+---
+
+# document-qna-hf
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: document-qna-hf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: document-qna-hf
+  template:
+    metadata:
+      labels:
+        app: document-qna-hf
+    spec:
+      containers:
+        - name: document-qna-hf
+          image: fra.ocir.io/wedoinfra/generative-api/document-qna-hf:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -67,21 +167,368 @@ spec:
                   name: huggingfacehub-api-token
                   key: HUGGINGFACEHUB_API_TOKEN
           ports:
-            - containerPort: 7860
+            - containerPort: 3000
               name: http
+          resources:
+            requests:
+              memory: 2000Mi
+          imagePullPolicy: Always
+      imagePullSecrets:
+              - name: ocirsecret
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node.kubernetes.io/disk-pressure"
+          operator: "Exists"
+          effect: "NoExecute"
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: documentqa-opensearch
+  name: document-qna-hf
 spec:
   selector:
-    app: documentqa-opensearch
+    app: document-qna-hf
   ports:
     - protocol: TCP
-      port: 7860
-      targetPort: 7860
-  type: LoadBalancer
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
 
 ---
 
+# image-generation
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-generation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image-generation
+  template:
+    metadata:
+      labels:
+        app: image-generation
+    spec:
+      containers:
+        - name: image-generation
+          image: fra.ocir.io/wedoinfra/generative-api/image-generation:0.0.1
+          env:
+            - name: discovery.type
+              value: single-node
+            - name: HUGGINGFACEHUB_MODEL
+              value: "stabilityai/stable-diffusion-2-1-base"
+          ports:
+            - containerPort: 3000
+              name: http
+          resources:
+            requests:
+              memory: 6000Mi
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ocirsecret
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node.kubernetes.io/disk-pressure"
+          operator: "Exists"
+          effect: "NoExecute"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: image-generation
+spec:
+  selector:
+    app: image-generation
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3001
+  type: ClusterIP
+
+---
+
+# music-generation
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: music-generation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: music-generation
+  template:
+    metadata:
+      labels:
+        app: music-generation
+    spec:
+      containers:
+        - name: music-generation
+          image: fra.ocir.io/wedoinfra/generative-api/music-generation:0.0.1
+          env:
+            - name: discovery.type
+              value: single-node
+          ports:
+            - containerPort: 3000
+              name: http
+          resources:
+            requests:
+              memory: 12000Mi
+          imagePullPolicy: Always
+      imagePullSecrets:
+              - name: ocirsecret
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node.kubernetes.io/disk-pressure"
+          operator: "Exists"
+          effect: "NoExecute"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: music-generation
+spec:
+  selector:
+    app: music-generation
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
+
+---
+
+# 3d-object
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: object-generation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: object-generation
+  template:
+    metadata:
+      labels:
+        app: object-generation
+    spec:
+      containers:
+        - name: object-generation
+          image: fra.ocir.io/wedoinfra/generative-api/object-generation:0.0.1
+          env:
+            - name: discovery.type
+              value: single-node
+          ports:
+            - containerPort: 3000
+              name: http
+          resources:
+            requests:
+              memory: 12000Mi
+          imagePullPolicy: Always
+      imagePullSecrets:
+              - name: ocirsecret
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node.kubernetes.io/disk-pressure"
+          operator: "Exists"
+          effect: "NoExecute"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: object-generation
+spec:
+  selector:
+    app: object-generation
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
+
+---
+
+# text-generation
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: text-generation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: text-generation
+  template:
+    metadata:
+      labels:
+        app: text-generation
+    spec:
+      containers:
+        - name: text-generation
+          image: fra.ocir.io/wedoinfra/generative-api/text-generation:0.0.1
+          env:
+            - name: discovery.type
+              value: single-node
+            - name: HUGGINGFACEHUB_MODEL
+              value: "bigscience/bloomz-7b1"
+          ports:
+            - containerPort: 3000
+              name: http
+          resources:
+            requests:
+              memory: 15000Mi
+          imagePullPolicy: Always
+      imagePullSecrets:
+              - name: ocirsecret
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node.kubernetes.io/disk-pressure"
+          operator: "Exists"
+          effect: "NoExecute"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: text-generation
+spec:
+  selector:
+    app: text-generation
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-generation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: video-generation
+  template:
+    metadata:
+      labels:
+        app: video-generation
+    spec:
+      containers:
+        - name: video-generation
+          image: fra.ocir.io/wedoinfra/generative-api/video-generation:0.0.1
+          env:
+            - name: discovery.type
+              value: single-node
+          ports:
+            - containerPort: 3000
+              name: http
+          resources:
+            requests:
+              memory: 9000Mi
+          imagePullPolicy: Always
+      imagePullSecrets:
+              - name: ocirsecret
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node.kubernetes.io/disk-pressure"
+          operator: "Exists"
+          effect: "NoExecute"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: video-generation
+spec:
+  selector:
+    app: video-generation
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: generative-api-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /music
+        pathType: Prefix
+        backend:
+          service:
+            name: music-generation
+            port:
+              number: 3000
+      - path: /image
+        pathType: Prefix
+        backend:
+          service:
+            name: image-generation
+            port:
+              number: 3000
+      - path: /text
+        pathType: Prefix
+        backend:
+          service:
+            name: text-generation
+            port:
+              number: 3000
+      - path: /video
+        pathType: Prefix
+        backend:
+          service:
+            name: video-generation
+            port:
+              number: 3000
+      - path: /object
+        pathType: Prefix
+        backend:
+          service:
+            name: object-generation
+            port:
+              number: 3000
+      - path: /doc_co
+        pathType: Prefix
+        backend:
+          service:
+            name: document-qna-cohere
+            port:
+              number: 3000
+      - path: /doc_hf
+        pathType: Prefix
+        backend:
+          service:
+            name: document-qna-hf
+            port:
+              number: 3000
