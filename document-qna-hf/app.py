@@ -1,13 +1,9 @@
 import os
-os.environ['CURL_CA_BUNDLE'] = ''
-
 from flask import Flask, request, jsonify
 from hf_langchain import OpenSearchBackend
 
 
 flask = Flask(__name__)
-
-chatbot = None
 
 OPENSEARCH_URL = os.environ['OPENSEARCH_URL']
 backed = OpenSearchBackend(OPENSEARCH_URL)
@@ -17,20 +13,23 @@ backed = OpenSearchBackend(OPENSEARCH_URL)
 def load_file():
     file = request.files['document']
     file_name = file.filename
-
+    index_name = file_name
+    if request.get_json().has_key('index'):
+        index_name = request.get_json()['index']
+    
     if not os.path.isdir(file_name):
         file.save(file_name)
 
     docs = backed.read_document(file_name)
-    backed.load_doc_to_db(docs, opensearch_index=file_name, verify_certs=False)
+    backed.load_doc_to_db(docs, opensearch_index=index_name, verify_certs=False)
 
-    return jsonify({"status": "file loaded", "index": file_name})
+    return jsonify({"status": "file loaded", "index": index_name})
 
 
 @flask.route('/query_docs', methods=['POST'])
 def query_docs():
     question = request.get_json()['question']
-    index_name = request.get_json()['index_name']
+    index_name = request.get_json()['index']
 
     return jsonify({"response" : backed.answer_query(question, opensearch_index=index_name, verify_certs=False)})
 
