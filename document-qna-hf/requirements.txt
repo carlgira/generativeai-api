@@ -1,6 +1,6 @@
 langchain==0.0.205
 pypdf==3.10.0
-unstructured[local-inference]==0.5.1
+unstructured==0.7.6
 requests==2.31.0
 Flask==2.3.2
 opensearch-py==2.2.0

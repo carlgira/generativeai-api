@@ -12,10 +12,10 @@ from transformers import AutoTokenizer
 from abc import ABC, abstractmethod
 import os
 
-CHUNK_SIZE = os.environ['DOC_CHUNK_SIZE']
-CHUNK_OVERLAP = os.environ['DOC_CHUNK_OVERLAP']
-MAX_NEW_TOKENS = os.environ['DOC_MAX_NEW_TOKENS']
-MAX_NUM_TOKENS = os.environ['LLM_MAX_NUM_TOKENS']
+CHUNK_SIZE = int(os.environ['DOC_CHUNK_SIZE'])
+CHUNK_OVERLAP = int(os.environ['DOC_CHUNK_OVERLAP'])
+MAX_NEW_TOKENS = int(os.environ['DOC_MAX_NEW_TOKENS'])
+MAX_NUM_TOKENS = int(os.environ['LLM_MAX_NUM_TOKENS'])
 HF_MODEL_NAME = os.environ['HUGGINGFACEHUB_MODEL']
 
 question_prompt_template = """Use ONLY the following pieces of context to answer the question at the end.
