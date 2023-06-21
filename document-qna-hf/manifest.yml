@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opensearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opensearch
+  template:
+    metadata:
+      labels:
+        app: opensearch
+    spec:
+      containers:
+        - name: opensearch
+          image: opensearchproject/opensearch:latest
+          env:
+            - name: discovery.type
+              value: single-node
+          ports:
+            - containerPort: 9200
+              name: http
+            - containerPort: 9300
+              name: transport
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+---
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: opensearch
+spec:
+  selector:
+    app: opensearch
+  ports:
+    - protocol: TCP
+      port: 9200
+      targetPort: 9200
+  type: LoadBalancer
+
+---
+# document-qna-hf
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: document-qna-hf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: document-qna-hf
+  template:
+    metadata:
+      labels:
+        app: document-qna-hf
+    spec:
+      containers:
+        - name: document-qna-hf
+          image: fra.ocir.io/wedoinfra/generative-api/document-qna-hf:0.0.1
+          env:
+            - name: discovery.type
+              value: single-node
+            - name: OPENSEARCH_URL
+              value: "https://admin:admin@opensearch.default.svc.cluster.local:9200"
+            - name: HUGGINGFACEHUB_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: huggingfacehub-api-token
+                  key: HUGGINGFACEHUB_API_TOKEN
+          ports:
+            - containerPort: 3000
+              name: http
+          resources:
+            requests:
+              memory: 2000Mi
+            limits:
+              nvidia.com/gpu: 1
+          imagePullPolicy: Always
+      imagePullSecrets:
+              - name: ocirsecret
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node.kubernetes.io/disk-pressure"
+          operator: "Exists"
+          effect: "NoExecute"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: document-qna-hf
+spec:
+  selector:
+    app: document-qna-hf
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: LoadBalancer
+
+---

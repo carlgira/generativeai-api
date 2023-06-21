@@ -10,7 +10,7 @@ backed = OpenSearchBackend(OPENSEARCH_URL)
 
 APP_INDEX_PREFIX ='hf_'
 
-@flask.route('/load_file', methods=['POST'])
+@flask.route('/hf/load_file', methods=['POST'])
 def load_file():
     file = request.files['document']
     file_name = file.filename
@@ -25,7 +25,7 @@ def load_file():
     return jsonify({"status": "file loaded", "index": request.form.get('index')})
 
 
-@flask.route('/query_docs', methods=['POST'])
+@flask.route('/hf/query_docs', methods=['POST'])
 def query_docs():
     question = request.get_json()['question']
     index_name = APP_INDEX_PREFIX + request.get_json()['index']

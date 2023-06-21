@@ -1,0 +1,56 @@
+# text-generation
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: text-generation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: text-generation
+  template:
+    metadata:
+      labels:
+        app: text-generation
+    spec:
+      containers:
+        - name: text-generation
+          image: fra.ocir.io/wedoinfra/generative-api/text-generation:0.0.1
+          env:
+            - name: discovery.type
+              value: single-node
+            - name: HUGGINGFACEHUB_MODEL
+              value: "bigscience/bloomz-7b1"
+          ports:
+            - containerPort: 3000
+              name: http
+          resources:
+            requests:
+              memory: 15000Mi
+            limits:
+              nvidia.com/gpu: 1
+          imagePullPolicy: Always
+      imagePullSecrets:
+              - name: ocirsecret
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node.kubernetes.io/disk-pressure"
+          operator: "Exists"
+          effect: "NoExecute"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: text-generation
+spec:
+  selector:
+    app: text-generation
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: LoadBalancer

@@ -1,0 +1,54 @@
+# music-generation
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: music-generation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: music-generation
+  template:
+    metadata:
+      labels:
+        app: music-generation
+    spec:
+      containers:
+        - name: music-generation
+          image: fra.ocir.io/wedoinfra/generative-api/music-generation:0.0.1
+          env:
+            - name: discovery.type
+              value: single-node
+          ports:
+            - containerPort: 3000
+              name: http
+          resources:
+            requests:
+              memory: 12000Mi
+            limits:
+              nvidia.com/gpu: 1
+          imagePullPolicy: Always
+      imagePullSecrets:
+              - name: ocirsecret
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node.kubernetes.io/disk-pressure"
+          operator: "Exists"
+          effect: "NoExecute"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: music-generation
+spec:
+  selector:
+    app: music-generation
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: LoadBalancer
