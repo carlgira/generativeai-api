@@ -13,7 +13,7 @@ APP_INDEX_PREFIX ='co_'
 @flask.route('/load_file', methods=['POST'])
 def load_file():
     file = request.files['document']
-    index_name = APP_INDEX_PREFIX + request.get_json()['index']
+    index_name = APP_INDEX_PREFIX + request.form.get('index')
 
     file_name = file.filename
     
@@ -29,7 +29,7 @@ def load_file():
 @flask.route('/query_docs', methods=['POST'])
 def query_docs():
     question = request.get_json()['question']
-    index_name = APP_INDEX_PREFIX + request.get_json()['index']
+    index_name = APP_INDEX_PREFIX + request.form.get('index')
 
     return jsonify({"response" : backed.answer_query(question, opensearch_index=index_name, verify_certs=False)})
 
