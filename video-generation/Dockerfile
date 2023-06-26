@@ -13,8 +13,8 @@ RUN wget https://bootstrap.pypa.io/get-pip.py && python3.11 get-pip.py
 RUN pip3.11 install --upgrade pip
 RUN pip3.11 install -r requirements.txt
 
-RUN git clone -b dev https://github.com/camenduru/Text-To-Video-Finetuning@9b14bbef2473c677ca86f4fe0e52cf5b2117a4b2
-RUN git clone https://huggingface.co/camenduru/potat1@0025067347b65c89c56353259c41912b5de6fe7e
+RUN git clone https://github.com/ExponentialML/Text-To-Video-Finetuning  && cd Text-To-Video-Finetuning && git checkout 89221af707bf57dfba6fc5918c2f62d0886d4aa8 && cd ..
+RUN git clone https://huggingface.co/camenduru/potat1 && cd potat1 && git checkout 0025067347b65c89c56353259c41912b5de6fe7e && cd ..
 
 # App
 COPY app.py ./
