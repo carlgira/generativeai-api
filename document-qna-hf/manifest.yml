@@ -41,7 +41,7 @@ spec:
     - protocol: TCP
       port: 9200
       targetPort: 9200
-  type: LoadBalancer
+  type: ClusterIP
 
 ---
 # document-qna-hf
@@ -62,7 +62,7 @@ spec:
     spec:
       containers:
         - name: document-qna-hf
-          image: fra.ocir.io/wedoinfra/generative-api/document-qna-hf:0.0.1
+          image: $REGION_OCIR/$TENANCY_NAME/generative-api/document-qna-hf:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -104,6 +104,6 @@ spec:
     - protocol: TCP
       port: 3000
       targetPort: 3000
-  type: LoadBalancer
+  type: ClusterIP
 
 ---

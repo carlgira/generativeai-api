@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: image-generation
-          image: fra.ocir.io/wedoinfra/generative-api/image-generation:0.0.1
+          image: $REGION_OCIR/$TENANCY_NAME/generative-api/image-generation:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -52,4 +52,4 @@ spec:
     - protocol: TCP
       port: 3000
       targetPort: 3001
-  type: LoadBalancer
+  type: ClusterIP

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: video-generation
-          image: fra.ocir.io/wedoinfra/generative-api/video-generation:0.0.1
+          image: $REGION_OCIR/$TENANCY_NAME/generative-api/video-generation:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -49,4 +49,4 @@ spec:
     - protocol: TCP
       port: 3000
       targetPort: 3000
-  type: LoadBalancer
+  type: ClusterIP

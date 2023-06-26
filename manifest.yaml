@@ -62,7 +62,7 @@ spec:
     spec:
       containers:
         - name: document-qna-cohere
-          image: fra.ocir.io/wedoinfra/generative-api/document-qna-cohere:0.0.1
+          image: $REGION_OCIR/$TENANCY_NAME/generative-api/document-qna-cohere:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -103,40 +103,7 @@ spec:
       port: 3000
       targetPort: 3000
   type: ClusterIP
-
 ---
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: opensearch
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: opensearch
-  template:
-    metadata:
-      labels:
-        app: opensearch
-    spec:
-      containers:
-        - name: opensearch
-          image: opensearchproject/opensearch:latest
-          env:
-            - name: discovery.type
-              value: single-node
-          ports:
-            - containerPort: 9200
-              name: http
-            - containerPort: 9300
-              name: transport
-      tolerations:
-        - key: "nvidia.com/gpu"
-          operator: "Exists"
-          effect: "NoSchedule"
----
-
 # document-qna-hf
 
 apiVersion: apps/v1
@@ -155,7 +122,7 @@ spec:
     spec:
       containers:
         - name: document-qna-hf
-          image: fra.ocir.io/wedoinfra/generative-api/document-qna-hf:0.0.1
+          image: $REGION_OCIR/$TENANCY_NAME/generative-api/document-qna-hf:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -217,7 +184,7 @@ spec:
     spec:
       containers:
         - name: image-generation
-          image: fra.ocir.io/wedoinfra/generative-api/image-generation:0.0.1
+          image: $REGION_OCIR/$TENANCY_NAME/generative-api/image-generation:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -250,7 +217,7 @@ spec:
   ports:
     - protocol: TCP
       port: 3000
-      targetPort: 3001
+      targetPort: 3000
   type: ClusterIP
 
 ---
@@ -273,7 +240,7 @@ spec:
     spec:
       containers:
         - name: music-generation
-          image: fra.ocir.io/wedoinfra/generative-api/music-generation:0.0.1
+          image: $REGION_OCIR/$TENANCY_NAME/generative-api/music-generation:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -328,7 +295,7 @@ spec:
     spec:
       containers:
         - name: object-generation
-          image: fra.ocir.io/wedoinfra/generative-api/object-generation:0.0.1
+          image: $REGION_OCIR/$TENANCY_NAME/generative-api/object-generation:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -383,7 +350,7 @@ spec:
     spec:
       containers:
         - name: text-generation
-          image: fra.ocir.io/wedoinfra/generative-api/text-generation:0.0.1
+          image: $REGION_OCIR/$TENANCY_NAME/generative-api/text-generation:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -438,7 +405,7 @@ spec:
     spec:
       containers:
         - name: video-generation
-          image: fra.ocir.io/wedoinfra/generative-api/video-generation:0.0.1
+          image: $REGION_OCIR/$TENANCY_NAME/generative-api/video-generation:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -474,61 +441,3 @@ spec:
   type: ClusterIP
 
 ---
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: generative-api-ingress
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /music
-        pathType: Prefix
-        backend:
-          service:
-            name: music-generation
-            port:
-              number: 3000
-      - path: /image
-        pathType: Prefix
-        backend:
-          service:
-            name: image-generation
-            port:
-              number: 3000
-      - path: /text
-        pathType: Prefix
-        backend:
-          service:
-            name: text-generation
-            port:
-              number: 3000
-      - path: /video
-        pathType: Prefix
-        backend:
-          service:
-            name: video-generation
-            port:
-              number: 3000
-      - path: /object
-        pathType: Prefix
-        backend:
-          service:
-            name: object-generation
-            port:
-              number: 3000
-      - path: /doc_co
-        pathType: Prefix
-        backend:
-          service:
-            name: document-qna-cohere
-            port:
-              number: 3000
-      - path: /doc_hf
-        pathType: Prefix
-        backend:
-          service:
-            name: document-qna-hf
-            port:
-              number: 3000
