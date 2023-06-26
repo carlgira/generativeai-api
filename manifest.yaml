@@ -62,7 +62,7 @@ spec:
     spec:
       containers:
         - name: document-qna-cohere
-          image: $REGION_OCIR/$TENANCY_NAME/generative-api/document-qna-cohere:0.0.1
+          image: REGION_OCIR/TENANCY_NAME/generative-api/document-qna-cohere:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -122,7 +122,7 @@ spec:
     spec:
       containers:
         - name: document-qna-hf
-          image: $REGION_OCIR/$TENANCY_NAME/generative-api/document-qna-hf:0.0.1
+          image: REGION_OCIR/TENANCY_NAME/generative-api/document-qna-hf:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -184,7 +184,7 @@ spec:
     spec:
       containers:
         - name: image-generation
-          image: $REGION_OCIR/$TENANCY_NAME/generative-api/image-generation:0.0.1
+          image: REGION_OCIR/TENANCY_NAME/generative-api/image-generation:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -240,7 +240,7 @@ spec:
     spec:
       containers:
         - name: music-generation
-          image: $REGION_OCIR/$TENANCY_NAME/generative-api/music-generation:0.0.1
+          image: REGION_OCIR/TENANCY_NAME/generative-api/music-generation:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -295,7 +295,7 @@ spec:
     spec:
       containers:
         - name: object-generation
-          image: $REGION_OCIR/$TENANCY_NAME/generative-api/object-generation:0.0.1
+          image: REGION_OCIR/TENANCY_NAME/generative-api/object-generation:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -350,7 +350,7 @@ spec:
     spec:
       containers:
         - name: text-generation
-          image: $REGION_OCIR/$TENANCY_NAME/generative-api/text-generation:0.0.1
+          image: REGION_OCIR/TENANCY_NAME/generative-api/text-generation:0.0.1
           env:
             - name: discovery.type
               value: single-node
@@ -405,7 +405,7 @@ spec:
     spec:
       containers:
         - name: video-generation
-          image: $REGION_OCIR/$TENANCY_NAME/generative-api/video-generation:0.0.1
+          image: REGION_OCIR/TENANCY_NAME/generative-api/video-generation:0.0.1
           env:
             - name: discovery.type
               value: single-node
